@@ -1,0 +1,7 @@
+SPARK_HOME = '/usr/local/spark'
+MASTER_NODE = 'k8s://35.226.10.213'
+job_name = 'spark-pi'
+class_name = 'org.apache.spark.examples.JavaSparkPi'
+spark_app_name = 'sparkpi'
+container_image = 'gcr.io/kubernetessparkautotune/spark:k8s-spark-2.3.0'
+java_code = 'local:///opt/spark/examples/jars/spark-examples_2.11-2.3.0.jar 100'
