@@ -47,8 +47,8 @@ Spark 2.3.0 provides docker template in the file spark/kubernetes/dockerfilrs/sp
 COPY pagerank /opt/spark/pagerank
 COPY data /opt/spark/data
 \\Submit PageRank docker image in Google Container Registry
-sudo bin/docker-image-tool.sh -r gcr.io/[google_container_registry_name] -t k8s-spark-pagerank build
-sudo bin/docker-image-tool.sh -r gcr.io/[google_container_registry_name] -t k8s-spark-pagerank push
+sudo bin/docker-image-tool.sh -r gcr.io/[google_container_registry_name] -t [my_tag] build
+sudo bin/docker-image-tool.sh -r gcr.io/[google_container_registry_name] -t [my_tag] push
 \\Public Pagerank docker image
 gsutil iam ch allUsers:objectViewer gs://artififacts.[google_container_registry_name].appspot.com
 ```
@@ -75,11 +75,38 @@ The Spark master, specified either via passing the --master command line argumen
 bin/spark-submit \
      --master k8s://[kubernetes_apiserver_url] \
      --deploy-mode cluster \
-     --name spark-pi \
-     --class org.apache.spark.examples.SparkPi \
-     --conf spark.app.name=sparkpi \
+     --name pagerank \
+     --class org.apache.spark.examples.PageRank \
+     --conf spark.app.name=pagerank \
      --conf spark.kubernetes.authenticate.diver.serviceAccountName=spark \
-     --conf spark.kubernetes.container.image=gcr.io/[google_container_registry_name]/spark:k8s-spark-pagerank \
+     --conf spark.kubernetes.container.image=gcr.io/[google_container_registry_name]/spark:[my_tag] \
      local:///opt/spark/examples/jars/spark-examples_2.11-2.3.0.jar \
      100000
+```
+
+
+# Accordia Usage
+
+
+
+
+# Hints
+1) Spark Diver Pod log
+You can check the log in the Spark Driver Pod to debug via the following command line.
+```
+kubectl get pods
+kubectl logs -f pagerank-xxxxxxxxxx-driver
+```
+
+2) Waiting for pulling the image
+It is due to Kubernetes Spark Diver Pod can not download the docker image from the Google Container Registry. Make sure your registry public via the following command line.
+```
+gsutil iam ch allUsers:objectViewer gs://artififacts.[google_container_registry_name].appspot.com
+```
+
+3) Cannot create pod
+It is due to Spark Driver Pod does not have permission to create Spark Executor pods. Make sure Kubernetes clusters with RBAC enabled.
+```
+kubectl create serviceaccount spark
+kubectl create clusterrolebinding  spark-role --clusterrole=edit --serviceaccount=default:spark --namespace=default
 ```
