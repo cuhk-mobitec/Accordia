@@ -5,7 +5,32 @@ Recognizing the diversity of big data analytic jobs, cloud providers offer a wid
 # Online Documentation
 The full technical report is available at [http://mobitec.ie.cuhk.edu.hk/cloudComputing/Accordia.pdf ](http://mobitec.ie.cuhk.edu.hk/cloudComputing/Accordia.pdf).
 
+
+# Prerequisites
+We build Accordia system for Spark applications on top of Kubernetes in Google Cloud. Following is the prerequisites for Accordia system.
+
+* Ubuntu 16.04
+* Java JDK 1.8
+* gcloud, gsutil
+* Kubernetes 1.8 or above
+* Spark 2.3.0 or above
+
+
 # Setup
 If you want to run the benchmarking Spark applications (i.e. SparkPi, PageRank and WordCount) of this repository, please use the following guide for setup and usage:
 
-* Kubernetes
+1) Install sbt
+We use sbt to compile Spark Scala program. You can use following command lines to install sbt.
+'''
+echo "deb https://dl.bintray.com/sbt/debian /" | sudo tee -a /etc/apt/sources.list.d/sbt/list
+sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 2EE0EA64E40A89B84B2DF73499E82A75642AC823
+sudo apt-get update
+sudo apt-get install sbt
+'''
+
+Following is the example to use sbt compiling PageRank program.
+'''
+mkdir ./pagerank
+mkdir -p ./pagerank/src/main/scala     
+vim ./pagerank/src/main/scala/SparkPageRank.scala
+'''
