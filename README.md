@@ -41,7 +41,7 @@ sbt package
 ```
 
 2) Build Spark Docker Image
-Spark 2.3.0 provides docker template in the file spark/kubernetes/dockerfilrs/spark/Dockerfile and provide tools to build spark docker image in the file spark/bin/docker-image-tool.sh . Following is the example to build Spark PageRank docker.
+Spark 2.3.0 provides an docker template in the file spark/kubernetes/dockerfilrs/spark/Dockerfile and provides tools to build spark docker images in the file spark/bin/docker-image-tool.sh . Following is the example to build Spark PageRank docker.
 ```
 \\Add following lines in Dockerfile to specify Pagerank program and Pagerank Data
 COPY pagerank /opt/spark/pagerank
@@ -86,11 +86,32 @@ bin/spark-submit \
 
 
 # Accordia Usage
+1) Prepare Spark job configuration
+In order to use Accordia system selecting the optimal cloud configuration, you need to prepare the file spark_job_configure.py to specify the parameter to launch the Spark application. Following is the example of spark_job_configure.py for PageRank.
+```
+SPARK_HOME = '/usr/local/spark'
+MASTER_NODE = 'k8s://[kubernetes_apiserver_url]'
+job_name = 'pagerank'
+class_name = 'org.apache.spark.examples.JavaSparkPi'
+spark_app_name = 'pagerank'
+container_image = 'gcr.io/[google_container_registry_name]/spark:[my_tag]'
+java_code = 'local:///opt/spark/examples/jars/spark-examples_2.11-2.3.0.jar 100'
+```
+
+2) Accordia without abort mechanism
+Launch the Spark application via Accordia System without abort mechanism.
+```
+python3 src/Accordia_without_Abort.py
+```
+
+3) Accordia with abort mechanism
+To avoid the waste of resources for the obvious poor-performance cloud configuration, Accordia can abort the job, as long as its estimated job completion cost is 30% larger than the best solution observed so far. Launch the Spark application via Accordia System without abort mechanism.
+```
+python3 src/Accordia_with_Abort.py
+```
 
 
-
-
-# Hints
+# Hints  
 1) Spark Diver Pod log
 You can check the log in the Spark Driver Pod to debug via the following command line.
 ```
