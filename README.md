@@ -21,16 +21,16 @@ If you want to run the benchmarking Spark applications (i.e. SparkPi, PageRank a
 
 1) Install sbt
 We use sbt to compile Spark Scala program. You can use following command lines to install sbt.
-'''
+```
 echo "deb https://dl.bintray.com/sbt/debian /" | sudo tee -a /etc/apt/sources.list.d/sbt/list
 sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 2EE0EA64E40A89B84B2DF73499E82A75642AC823
 sudo apt-get update
 sudo apt-get install sbt
-'''
+```
 
 Following is the example to use sbt compiling PageRank program.
-'''
+```
 mkdir ./pagerank
 mkdir -p ./pagerank/src/main/scala     
 vim ./pagerank/src/main/scala/SparkPageRank.scala
-'''
+```
